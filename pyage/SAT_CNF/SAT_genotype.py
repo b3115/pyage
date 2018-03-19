@@ -4,9 +4,10 @@ import random
 
 class SATGenotype(object):
     def __init__(self, clauses, variables):
+        self.variables = variables
         self.clauses = clauses
         self.n = len(variables)
-        self.list = [False if random.random() < 0.5 else True for _ in range(0, 4)]
+        self.list = [False if random.random() < 0.5 else True for _ in range(0, self.n)]
         self.fitness = self.calculate_fitness()
 
     def __str__(self):
@@ -16,7 +17,7 @@ class SATGenotype(object):
         fitness = 0
         for clause in self.clauses:
             clause_satisfied = 0
-            for variable_id, is_variable_negative in clause:
+            for variable_id, is_variable_negative in clause.iteritems():
                 if self.list[variable_id] == is_variable_negative:
                     clause_satisfied = 1
             fitness += clause_satisfied
@@ -25,3 +26,5 @@ class SATGenotype(object):
     def set_list(self, list):
         self.list = list[:]
         self.fitness = self.calculate_fitness()
+
+

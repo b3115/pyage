@@ -38,3 +38,26 @@ class SATMutation(AbstractMutation):
 
         return gen
 
+class SATMutation2(AbstractMutation):
+    def __init__(self, probability):
+        super(SATMutation2, self).__init__(SATGenotype, probability)
+
+    def mutate(self, genotype):
+        logger.debug("Mutating (rand swap) genotype: " + str(genotype))
+
+        l = genotype.list[:]
+        for clause in genotype.clauses:
+            clause_satisfied = False
+            for variable_id, value in clause.iteritems():
+                if l[variable_id]==value:
+                    clause_satisfied=True
+            if not clause_satisfied:
+                random_variable = random.choice( list(clause))
+                l[random_variable] = not l[random_variable]
+                break
+        gen = SATGenotype(genotype.clauses, genotype.variables)
+        gen.set_list(l)
+
+        logger.debug("Mutated 2 (rand swap) genotype: " + str(gen))
+
+        return gen

@@ -25,6 +25,7 @@ if len(args) > 1:
     variables_count = int(args[1])
 if len(args) > 2:
     clauses_count = int(args[2])
+print(variables_count)
 variables = [True if random.random() < 0.5 else False for _ in range(variables_count)]
 clauses = []
 for i in range(clauses_count):

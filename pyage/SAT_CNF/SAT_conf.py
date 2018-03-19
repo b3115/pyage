@@ -5,7 +5,7 @@ import sys
 from pyage.SAT_CNF.SAT_crossover import SATCrossover
 from pyage.SAT_CNF.SAT_eval import SATEvaluator
 from pyage.SAT_CNF.SAT_init import SATInitializer, root_agents_factory, EmasInitializer
-from pyage.SAT_CNF.SAT_mutation import SATMutation
+from pyage.SAT_CNF.SAT_mutation import SATMutation2
 from pyage.SAT_CNF.SAT_naming_service import NamingService
 from pyage.SAT_CNF.SAT_selection import TournamentSelection
 from pyage.core import address
@@ -40,13 +40,7 @@ def parse_args():
     return [emas, prob, func, filename]
 
 
-args = None
-
-try:
-    args = parse_args()
-except ValueError as e:
-    logger.debug(e.message)
-
+args = parse_args()
 use_emas = args[0]
 mutation_prob = args[1]
 mutation_func = args[2]
@@ -61,7 +55,7 @@ else:
     logger.debug("EVO, %s agents", agents_count)
     agents = generate_agents("agent", agents_count, Agent)
 
-stop_condition = lambda: StepLimitStopCondition(1000)
+stop_condition = lambda: StepLimitStopCondition(100)
 
 if not use_emas:
     size = 130
@@ -69,7 +63,7 @@ if not use_emas:
     population_size = 10000
     operators = lambda: [SATEvaluator(), TournamentSelection(size=125, tournament_size=125),
                          SATCrossover(size=size),
-                         SATMutation(probability=mutation_prob)]
+                         SATMutation2(probability=mutation_prob)]
     initializer = lambda: SATInitializer(population_size=population_size, filename=filename)
 
 else:
@@ -81,13 +75,13 @@ else:
     minimal_energy = lambda: 10
     reproduction_minimum = lambda: 100
     migration_minimum = lambda: 120
-    newborn_energy = lambda: 100
+    newborn_energy = lambda: 200
     transferred_energy = lambda: 40
 
     budget = 0
     evaluation = lambda: SATEvaluator()
     crossover = lambda: SATCrossover(size=30)
-    mutation = lambda: SATMutation(probability=mutation_prob)
+    mutation = lambda: SATMutation2(probability=mutation_prob)
 
     def simple_cost_func(x):
         return abs(x) * 10
