@@ -5,8 +5,6 @@ import random
 from pyage.SAT_CNF.SAT_genotype import SATGenotype
 from pyage.core.operator import Operator
 
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -26,38 +24,43 @@ class SATMutation(AbstractMutation):
         super(SATMutation, self).__init__(SATGenotype, probability)
 
     def mutate(self, genotype):
-        logger.debug("Mutating (rand swap) genotype: " + str(genotype))
+        # logger.debug("Mutating (rand swap) genotype: " + str(genotype))
+        gen=genotype
+        if random.random() < self.probability:
+            l = genotype.list[:]
+            random_index = l[random.randrange(0, len(l))]
+            l[random_index] = not l[random_index]
+            gen = SATGenotype(genotype.clauses, genotype.variables)
+            gen.set_list(l)
 
-        l = genotype.list[:]
-        random_index = l[random.randrange(0, len(l))]
-        l[random_index] = not l[random_index]
-        gen = SATGenotype(genotype.clauses, genotype.variables)
-        gen.set_list(l)
-
-        logger.debug("Mutated (rand swap) genotype: " + str(gen))
+        # logger.debug("Mutated (rand swap) genotype: " + str(gen))
 
         return gen
+
 
 class SATMutation2(AbstractMutation):
     def __init__(self, probability):
         super(SATMutation2, self).__init__(SATGenotype, probability)
 
     def mutate(self, genotype):
-        logger.debug("Mutating (rand swap) genotype: " + str(genotype))
-
-        l = genotype.list[:]
-        for clause in genotype.clauses:
-            clause_satisfied = False
-            for variable_id, value in clause.iteritems():
-                if l[variable_id]==value:
-                    clause_satisfied=True
-            if not clause_satisfied:
-                random_variable = random.choice( list(clause))
+        # logger.debug("Mutating (rand swap) genotype: " + str(genotype))
+        gen = genotype
+        if random.random() < self.probability:
+            unsatisfied=[]
+            l = genotype.list[:]
+            for clause in genotype.clauses:
+                clause_satisfied = False
+                for variable_id, value in clause.iteritems():
+                    if l[variable_id] == value:
+                        clause_satisfied = True
+                if not clause_satisfied:
+                    unsatisfied.append(clause)
+            if len(unsatisfied)>0:
+                random_variable = random.choice(list(random.choice(unsatisfied)))
                 l[random_variable] = not l[random_variable]
-                break
-        gen = SATGenotype(genotype.clauses, genotype.variables)
-        gen.set_list(l)
+            gen = SATGenotype(genotype.clauses, genotype.variables)
+            gen.set_list(l)
 
-        logger.debug("Mutated 2 (rand swap) genotype: " + str(gen))
+            # logger.debug("Mutated 2 (rand swap) genotype: " + str(gen))
 
         return gen

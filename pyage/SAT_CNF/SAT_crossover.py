@@ -28,7 +28,7 @@ class SATCrossover(AbstractCrossover):
         super(SATCrossover, self).__init__(SATGenotype, size)
 
     def cross(self, p1, p2):
-        logger.debug("Crossing: " + str(p1) + " and " + str(p2))
+        # logger.debug("Crossing: " + str(p1) + " and " + str(p2))
 
         new_genotype_list = p1.list[:]
 
@@ -39,6 +39,6 @@ class SATCrossover(AbstractCrossover):
         genotype = SATGenotype(p1.clauses, p1.variables)
         genotype.set_list(new_genotype_list)
 
-        logger.debug("Crossed genotype: " + str(genotype))
+        # logger.debug("Crossed genotype: " + str(genotype))
 
         return genotype

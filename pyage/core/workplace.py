@@ -3,6 +3,7 @@ from pyage.core.address import Addressable
 from pyage.core.inject import Inject, InjectOptional
 from pyage.core.agent.agent import AGENT
 import signal
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -53,8 +54,10 @@ class Workplace(Addressable):
             for agent in self.__agents.values():
                 agent.step()
             self.stats.update(self.steps, self.__agents.values())
+            sys.stdout.write('\rstep:'+ str(self.steps)+ 'fitness:'+str(self.get_fitness()))
             if self.stop_condition.should_stop(self):
                 self.stop()
+                sys.stdout.write('\n')
         except:
             logger.warning("Caught exception, stopping")
             logging.exception("exception in step %s" % self.steps)

@@ -25,7 +25,6 @@ class EmasInitializer(object):
     @staticmethod
     def get_clauses_from_file(filename):
         clauses = []
-        variables = []
         with open(filename, "r") as input:
             variables_count = int(input.readline())
             variables = [i for i in range(variables_count)]

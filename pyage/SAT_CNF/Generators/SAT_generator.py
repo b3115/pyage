@@ -1,6 +1,15 @@
 import random
 import sys
 
+# from pyage.SAT_CNF.SAT_clause_util import check_satisfiability, is_clause_satisfied
+
+def check_satisfiability(clauses, variables):
+
+    for clause in clauses:
+        if not is_clause_satisfied(clause,variables):
+            print("not satisfied for clause: ",clause)
+
+
 def is_clause_satisfied(clause, variables):
     satisfied = False
     for variable_id, variable_value in clause.iteritems():
@@ -10,13 +19,6 @@ def is_clause_satisfied(clause, variables):
         return False
     else:
         return True
-
-def check_satisfiability(clauses, variables):
-
-    for clause in clauses:
-        if not is_clause_satisfied(clause,variables):
-            print("not satisfied for clause: ",clause)
-
 
 args = sys.argv
 variables_count = 10
@@ -36,7 +38,7 @@ for i in range(clauses_count):
         while random_variable_id in clause:
             random_variable_id = random.randrange(0, variables_count)
         clause[random_variable_id] = True if random.random() < 0.5 else False
-    if not is_clause_satisfied(clause,variables):
+    if not is_clause_satisfied(clause, variables):
         variable_id_to_be_changed = random.choice(list(clause))
         clause[variable_id_to_be_changed] = not clause[variable_id_to_be_changed]
     clauses.append(clause)
@@ -48,4 +50,4 @@ for clause in clauses:
         output_str += str(variable_id)
         output_str += ','
     print(output_str[:-1])
-check_satisfiability(clauses,variables)
+check_satisfiability(clauses, variables)
